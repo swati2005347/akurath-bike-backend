@@ -7,8 +7,8 @@ router.get('/', async (req, res) => {
   try {
     const bikes = await Bike.find();
     res.json(bikes);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
