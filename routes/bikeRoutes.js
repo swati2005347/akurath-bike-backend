@@ -1,35 +1,35 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Bike = require('../models/Bike');
+const Bike = require("../models/Bike");
 
-// GET all bikes
-router.get('/', async (req, res) => {
+// @route   GET /api/bikes
+// @desc    Get all bikes
+router.get("/", async (req, res) => {
   try {
     const bikes = await Bike.find();
     res.json(bikes);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
-// POST single or multiple bikes
-router.post('/', async (req, res) => {
-  const data = Array.isArray(req.body) ? req.body : [req.body];
+// @route   POST /api/bikes
+// @desc    Add a new bike
+router.post("/", async (req, res) => {
+  const { name, price, description, image } = req.body;
+
+  const bike = new Bike({
+    name,
+    price,
+    description,
+    image,
+  });
+
   try {
-    const savedBikes = await Bike.insertMany(data);
-    res.status(201).json(savedBikes);
+    const newBike = await bike.save();
+    res.status(201).json(newBike);
   } catch (err) {
     res.status(400).json({ message: err.message });
-  }
-});
-
-// DELETE all bikes (temporary admin route)
-router.delete('/delete-all', async (req, res) => {
-  try {
-    await Bike.deleteMany({});
-    res.status(200).json({ message: 'All bikes deleted successfully' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
   }
 });
 
