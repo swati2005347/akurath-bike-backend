@@ -34,15 +34,16 @@ router.post("/bulk", async (req, res) => {
   }
 });
 // DELETE a bike by ID
-router.delete("/:id", async (req, res) => {
+// DELETE all bikes (dev tool - remove after use)
+router.delete("/", async (req, res) => {
   try {
-    const bike = await Bike.findByIdAndDelete(req.params.id);
-    if (!bike) return res.status(404).json({ message: "Bike not found" });
-    res.json({ message: "Bike deleted" });
+    await Bike.deleteMany({});
+    res.json({ message: "All bikes deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
 
 
 
