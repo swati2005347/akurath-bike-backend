@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Bike = require("../models/Bike");
 
-// @route   GET /api/bikes
-// @desc    Get all bikes
+// ✅ GET all bikes
 router.get("/", async (req, res) => {
   try {
     const bikes = await Bike.find();
@@ -13,8 +12,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// @route   POST /api/bikes
-// @desc    Add a new bike
+// ✅ POST a new bike
 router.post("/", async (req, res) => {
   const { name, price, description, image } = req.body;
 
@@ -24,7 +22,16 @@ router.post("/", async (req, res) => {
     description,
     image,
   });
-  // POST multiple bikes (bulk insert)
+
+  try {
+    const newBike = await bike.save();
+    res.status(201).json(newBike);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// ✅ POST multiple bikes (bulk insert)
 router.post("/bulk", async (req, res) => {
   try {
     const bikes = await Bike.insertMany(req.body);
@@ -33,25 +40,14 @@ router.post("/bulk", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-// DELETE a bike by ID
-// DELETE all bikes (dev tool - remove after use)
+
+// ✅ DELETE all bikes
 router.delete("/", async (req, res) => {
   try {
     await Bike.deleteMany({});
     res.json({ message: "All bikes deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
-  }
-});
-
-
-
-
-  try {
-    const newBike = await bike.save();
-    res.status(201).json(newBike);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
   }
 });
 
